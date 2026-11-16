@@ -5,10 +5,13 @@ public class PlayerController : MonoBehaviour
 {
 
     public int moveSpeed;
+    public GameObject camera;
 
     private Rigidbody rb;
-    private float xMovement;
-    private float yMovement;
+    private Vector3 xMovement;
+    private Vector3 yMovement;
+    private Vector2 movement;
+
 
 
 
@@ -16,23 +19,33 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent <Rigidbody>();
+
+        //makes the cursor invisible and locks it in the middle of the screen
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
       void OnMove (InputValue movementValue)
    {
-    Vector2 movement = movementValue.Get<Vector2>();
+    movement = movementValue.Get<Vector2>();
+   }
 
-    xMovement = movement.x;
-    yMovement = movement.y;
+   void Update(){
+    //needs to be in update to get accurate camera location
+    Vector3 cameraRight = camera.transform.right;
+    Vector3 cameraForward = camera.transform.forward;
 
+    //multiplys the movement vectors components with the coresponding camera direction to align them
+    xMovement = movement.x * cameraRight;
+    yMovement = movement.y * cameraForward;
    }
 
        void FixedUpdate() 
    {
 
-    Vector3 movement = new Vector3 (xMovement,0f,yMovement);
-
-    rb.AddForce(movement*moveSpeed);
+    Vector3 movementVect = xMovement + yMovement;
+    rb.AddForce(movementVect*moveSpeed);
+    
    }
 }
