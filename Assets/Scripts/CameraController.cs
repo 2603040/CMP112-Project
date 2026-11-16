@@ -10,17 +10,15 @@ public class CameraController : MonoBehaviour {
 
      public float xturnSpeed = 5.0f;
      public float yturnSpeed = 5.0f;
+     public float zOffset = 5.0f;
      public GameObject player;
 
      private Transform playerTransform;     
      private Vector3 offset;
-     private float yOffset = 10.0f;
-     private float zOffset = 10.0f;
-     private Vector2 PreviosPos = new Vector2(0,0);
 
      void Start () {
          playerTransform = player.transform;
-         offset = new Vector3(playerTransform.position.x, playerTransform.position.y + yOffset, playerTransform.position.z + zOffset);
+         offset = new Vector3(0, 0, zOffset);
      }
 
         
@@ -28,15 +26,8 @@ public class CameraController : MonoBehaviour {
      {
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
 
-        //gets the angle perpendicular to the cameras current y rotation
-        float perpToYAngle = transform.localEulerAngles[1]+90;
-        float perpToYAngleRad =(perpToYAngle* (float)3.14159)/180;
-
-        //gets the vector that is perpendicular to the cameras current y rotation
-        Vector3 localLeft = new Vector3 (Mathf.Sin(perpToYAngleRad),0,Mathf.Cos(perpToYAngleRad));
-
-        //rotates the camera vertically around the axis it is perpedicular to
-        offset = Quaternion.AngleAxis (mouseDelta.y * -yturnSpeed, localLeft) * offset;
+        //rotates the camera around the local right vector
+        offset = Quaternion.AngleAxis (mouseDelta.y * -yturnSpeed, transform.right) * offset;
 
 
         offset = Quaternion.AngleAxis (mouseDelta.x * xturnSpeed, Vector3.up) * offset;

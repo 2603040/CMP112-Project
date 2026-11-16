@@ -34,18 +34,21 @@ public class PlayerController : MonoBehaviour
    void Update(){
     //needs to be in update to get accurate camera location
     Vector3 cameraRight = camera.transform.right;
-    Vector3 cameraForward = camera.transform.forward;
+
+    //I dont use camera.transform.forward as that cares about the y rotation which I dont want it to.
+    Vector3 cameraForward = new Vector3 (-cameraRight.z,0.0f,cameraRight.x);
+
 
     //multiplys the movement vectors components with the coresponding camera direction to align them
-    xMovement = movement.x * cameraRight;
-    yMovement = movement.y * cameraForward;
+    xMovement = movement.x * -cameraForward;
+    yMovement = movement.y * cameraRight;
    }
 
        void FixedUpdate() 
    {
 
     Vector3 movementVect = xMovement + yMovement;
-    rb.AddForce(movementVect*moveSpeed);
+    rb.AddTorque(movementVect*moveSpeed);
     
    }
 }
