@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 yMovement;
     private Vector2 movement;
     private bool grounded;
+    private Vector3 previousCheckpoint;
 
 
 
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent <Rigidbody>();
+        previousCheckpoint = transform.position;
 
         //makes the cursor invisible and locks it in the middle of the screen
         Cursor.lockState = CursorLockMode.Locked;
@@ -37,41 +39,57 @@ public class PlayerController : MonoBehaviour
    void OnJump (){
     
 
-    RaycastHit hitInfo;
-    Ray ray = new Ray(transform.position, -Vector3.up);
+        RaycastHit hitInfo;
+        Ray ray = new Ray(transform.position, -Vector3.up);
 
-    //Do the raycast. Store the information in hitInfo
-    bool rayHit = Physics.Raycast(ray, out hitInfo, 1);
+        //Do the raycast. Store the information in hitInfo
+        bool rayHit = Physics.Raycast(ray, out hitInfo, 1);
 
-    if (rayHit)
-    {
+        if (rayHit){
 
-        grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.7f;
-        if (grounded){
-            rb.AddForce(hitInfo.normal*jumpPower);
+            grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.7f;
+
+            if (grounded){
+                rb.AddForce(hitInfo.normal*jumpPower);
+            }
         }
-        
-    }
-
    }
 
+   void OnReset(){
+        transform.position = previousCheckpoint;
+        rb.linearVelocity = new Vector3 (0,0,0);
+        rb.angularVelocity = new Vector3 (0,0,0);
+
+   }
+   
+   void OnTriggerEnter(Collider other){
+        if (other.gameObject.CompareTag("Checkpoint")){
+
+            previousCheckpoint = other.gameObject.transform.position;
+
+        }
+        if (other.gameObject.CompareTag("Death")){
+            OnReset();
+        }
+     }
+
    void Update(){
-    //needs to be in update to get accurate camera location
-    Vector3 cameraRight = camera.transform.right;
+        //needs to be in update to get accurate camera location
+        Vector3 cameraRight = camera.transform.right;
 
-    //I dont use camera.transform.forward as that cares about the y rotation which I dont want it to.
-    Vector3 cameraForward = new Vector3 (-cameraRight.z,0.0f,cameraRight.x);
+        //I dont use camera.transform.forward as that cares about the y rotation which I dont want it to.
+        Vector3 cameraForward = new Vector3 (-cameraRight.z,0.0f,cameraRight.x);
 
 
-    //multiplys the movement vectors components with the coresponding camera direction to align them
-    xMovement = movement.x * -cameraForward;
-    yMovement = movement.y * cameraRight;
+        //multiplys the movement vectors components with the camera direction to align them
+        xMovement = movement.x * -cameraForward;
+        yMovement = movement.y * cameraRight;
    }
 
     void FixedUpdate() {
 
-    Vector3 movementVect = xMovement + yMovement;
-    rb.AddTorque(movementVect*moveSpeed);
+        Vector3 movementVect = xMovement + yMovement;
+        rb.AddTorque(movementVect*moveSpeed);
     
    }
 }
