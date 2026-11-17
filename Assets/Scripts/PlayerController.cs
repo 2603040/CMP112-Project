@@ -4,17 +4,21 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
-    public int moveSpeed;
+    
     public GameObject camera;
+    public int moveSpeed;
     public int jumpPower = 100;
 
-
     private Rigidbody rb;
+
     private Vector3 xMovement;
     private Vector3 yMovement;
     private Vector2 movement;
+
     private bool grounded;
     private Vector3 previousCheckpoint;
+    private Vector3 cameraRight;
+    private Vector3 cameraForward;
 
 
 
@@ -73,14 +77,25 @@ public class PlayerController : MonoBehaviour
         }
      }
 
-   void Update(){
+
+    void OnLook(InputValue lookvalue){
+        //the player input component only seems to be able to affect one object at a time 
+        //so I am sending the data to the camera
+        camera.SendMessage("OnLook",lookvalue);
+
         //needs to be in update to get accurate camera location
-        Vector3 cameraRight = camera.transform.right;
+        cameraRight = camera.transform.right;
 
         //I dont use camera.transform.forward as that cares about the y rotation which I dont want it to.
-        Vector3 cameraForward = new Vector3 (-cameraRight.z,0.0f,cameraRight.x);
+        cameraForward = new Vector3 (-cameraRight.z,0.0f,cameraRight.x);
+    }
 
+    void OnScroll(InputValue scrollValue){
+        camera.SendMessage("OnScroll",scrollValue);
+    }
 
+   void Update(){
+        
         //multiplys the movement vectors components with the camera direction to align them
         xMovement = movement.x * -cameraForward;
         yMovement = movement.y * cameraRight;

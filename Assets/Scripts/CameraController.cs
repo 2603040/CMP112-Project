@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour {
 
      private Transform playerTransform;     
      private Vector3 offset;
+     private float viewDistance = 15;
 
      void Start () {
          playerTransform = player.transform;
@@ -22,20 +23,38 @@ public class CameraController : MonoBehaviour {
      }
 
         
-     void Update()
+     void OnLook(InputValue lookValue)
      {
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+        Vector2 mouseDelta = lookValue.Get<Vector2>();
 
         //rotates the camera around the local right vector
         offset = Quaternion.AngleAxis (mouseDelta.y * -yturnSpeed, transform.right) * offset;
-
-
         offset = Quaternion.AngleAxis (mouseDelta.x * xturnSpeed, Vector3.up) * offset;
+     } 
+
+     void OnScroll(InputValue scrollValue){
+            viewDistance -= scrollValue.Get<float>();
+            Debug.Log(viewDistance);
+
+            if (viewDistance <= 0){
+                viewDistance = 1;
+            }
+
+            if (viewDistance > 20){
+                viewDistance = 20;
+            }
+
+            float multiplyer = viewDistance/offset.magnitude;
+                offset = new Vector3 (offset.x*multiplyer,offset.y*multiplyer,offset.z*multiplyer);
+        
+     }
+        
+        
+        
+     
+
+     void Update(){
         transform.position = playerTransform.position + offset; 
         transform.LookAt(playerTransform.position);
-
-
-
-         transform.position = playerTransform.position + offset; 
-     } 
+     }
 }

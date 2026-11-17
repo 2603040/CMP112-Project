@@ -647,7 +647,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d7f81f6aa71dd9a00854810831335aef, type: 2}
+  - {fileID: 2100000, guid: 85bc9ef4e7aa16c6ca772625ae80332b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -840,8 +840,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b51abc9bd43ecb899d8cfdf30b8105d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  moveSpeed: 50
   camera: {fileID: 1946424811}
+  moveSpeed: 50
   jumpPower: 2000
 --- !u!114 &1691945322
 MonoBehaviour:
@@ -946,7 +946,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d7f81f6aa71dd9a00854810831335aef, type: 2}
+  - {fileID: 2100000, guid: 85bc9ef4e7aa16c6ca772625ae80332b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
