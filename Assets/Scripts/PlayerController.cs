@@ -6,11 +6,14 @@ public class PlayerController : MonoBehaviour
 
     public int moveSpeed;
     public GameObject camera;
+    public int jumpPower = 100;
+
 
     private Rigidbody rb;
     private Vector3 xMovement;
     private Vector3 yMovement;
     private Vector2 movement;
+    private bool grounded;
 
 
 
@@ -25,10 +28,30 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
-      void OnMove (InputValue movementValue)
+
+    void OnMove (InputValue movementValue)
    {
-    movement = movementValue.Get<Vector2>();
+        movement = movementValue.Get<Vector2>();
+   }
+
+   void OnJump (){
+    
+
+    RaycastHit hitInfo;
+    Ray ray = new Ray(transform.position, -Vector3.up);
+
+    //Do the raycast. Store the information in hitInfo
+    bool rayHit = Physics.Raycast(ray, out hitInfo, 1);
+
+    if (rayHit)
+    {
+        grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.5f;
+        if (grounded){
+            rb.AddForce(Vector3.up*jumpPower);
+        }
+        
+    }
+
    }
 
    void Update(){
@@ -44,8 +67,7 @@ public class PlayerController : MonoBehaviour
     yMovement = movement.y * cameraRight;
    }
 
-       void FixedUpdate() 
-   {
+    void FixedUpdate() {
 
     Vector3 movementVect = xMovement + yMovement;
     rb.AddTorque(movementVect*moveSpeed);
