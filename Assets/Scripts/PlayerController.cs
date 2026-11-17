@@ -45,9 +45,10 @@ public class PlayerController : MonoBehaviour
 
     if (rayHit)
     {
-        grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.5f;
+
+        grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.7f;
         if (grounded){
-            rb.AddForce(Vector3.up*jumpPower);
+            rb.AddForce(hitInfo.normal*jumpPower);
         }
         
     }
