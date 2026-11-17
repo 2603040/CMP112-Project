@@ -77,6 +77,13 @@ public class PlayerController : MonoBehaviour
         }
      }
 
+     void OnTriggerStay(Collider other){
+        if (other.gameObject.CompareTag("Booster")){
+            rb.AddForce(-other.transform.forward*other.gameObject.GetComponent<Booster>().boostPower);
+
+        }
+     }
+
 
     void OnLook(InputValue lookvalue){
         //the player input component only seems to be able to affect one object at a time 

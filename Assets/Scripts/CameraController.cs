@@ -34,7 +34,6 @@ public class CameraController : MonoBehaviour {
 
      void OnScroll(InputValue scrollValue){
             viewDistance -= scrollValue.Get<float>();
-            Debug.Log(viewDistance);
 
             if (viewDistance <= 0){
                 viewDistance = 1;
