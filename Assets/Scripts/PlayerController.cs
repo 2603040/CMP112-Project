@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro; 
 
 public class PlayerController : MonoBehaviour
 {
 
-    
+    public TextMeshProUGUI coincountText;
     public GameObject camera;
     public int moveSpeed;
     public int jumpPower = 100;
@@ -20,6 +21,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraRight;
     private Vector3 cameraForward;
 
+    private int coinCount = 0; 
+    
+
 
 
 
@@ -32,8 +36,14 @@ public class PlayerController : MonoBehaviour
         //makes the cursor invisible and locks it in the middle of the screen
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        SetCoinCountText();
     }
 
+    void SetCoinCountText() 
+    { 
+    coincountText.text = "Count: " + coinCount.ToString(); 
+    }
 
     void OnMove (InputValue movementValue)
    {
@@ -50,16 +60,20 @@ public class PlayerController : MonoBehaviour
         bool rayHit = Physics.Raycast(ray, out hitInfo, 1);
 
         if (rayHit){
-
+            //makes it so you cant jump if the floor is too steep
+            //the o.7 makes it stop working just after 45degrees
             grounded = Vector3.Dot(Vector3.up, hitInfo.normal) > 0.7f;
 
+
             if (grounded){
+                //makes player jump away from whatever they are jumping off of
                 rb.AddForce(hitInfo.normal*jumpPower);
             }
         }
    }
 
    void OnReset(){
+        //resets the players location to that of the previous check point and resets all velocity to zero
         transform.position = previousCheckpoint;
         rb.linearVelocity = new Vector3 (0,0,0);
         rb.angularVelocity = new Vector3 (0,0,0);
@@ -74,6 +88,14 @@ public class PlayerController : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Death")){
             OnReset();
+        }
+        if (other.gameObject.CompareTag("Coin"))
+        {
+
+            other.gameObject.SetActive(false);
+            coinCount = coinCount + 1;
+            SetCoinCountText();
+
         }
      }
 
@@ -104,6 +126,7 @@ public class PlayerController : MonoBehaviour
    void Update(){
         
         //multiplys the movement vectors components with the camera direction to align them
+        //this is at 90 degrees to what you think it should be because the addTourque function is weird and dumb
         xMovement = movement.x * -cameraForward;
         yMovement = movement.y * cameraRight;
    }
