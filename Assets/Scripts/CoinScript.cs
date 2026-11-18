@@ -1,11 +1,10 @@
 using UnityEngine;
 
-public class scr : MonoBehaviour 
-{ 
- 
- 
+public class CoinScript : MonoBehaviour
+{
     void Update() 
     { 
         transform.Rotate(new Vector3(12, 40, 25) * Time.deltaTime); 
     } 
-} 
+}
+

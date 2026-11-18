@@ -4,8 +4,9 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-
+    public float time;
     public TextMeshProUGUI coincountText;
+    public TextMeshProUGUI timeText;
     public GameObject camera;
     public int moveSpeed;
     public int jumpPower = 100;
@@ -49,6 +50,12 @@ public class PlayerController : MonoBehaviour
    {
         movement = movementValue.Get<Vector2>();
    }
+
+    void timing() 
+    { 
+        time += Time.deltaTime; 
+        timeText.text = "Time: " + time.ToString(); 
+    } 
 
    void OnJump (){
     
@@ -124,6 +131,7 @@ public class PlayerController : MonoBehaviour
     }
 
    void Update(){
+        timing(); 
         
         //multiplys the movement vectors components with the camera direction to align them
         //this is at 90 degrees to what you think it should be because the addTourque function is weird and dumb
